@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+#
+# Print contents of a file character by character.
+# - Niklas Schultz
+#
+
+speech ()
+{
+    tput civis
+    clear
+
+    sleep 1
+
+    bold=0
+    italic=0
+
+    content=$(cat $file)
+    for (( i=0; i<${#content}; i++ )); do
+       if [ "${content:$i-1:1}" == ':' ]; then
+           sleep 1
+       fi
+       if [ "${content:$i-1:1}" == '.' ]; then
+           sleep 1
+       fi
+       if [ "${content:$i-1:1}" == ';' ]; then
+           sleep 1
+       fi
+       if [ "${content:$i-1:1}" == '?' ]; then
+           sleep 1
+       fi
+       if [ "${content:$i-1:1}" == '!' ]; then
+           sleep 1
+       fi
+
+       if [ "${content:$i-1:1}" == '"' ]; then
+           if [ $italic == 0 ]; then
+              printf "${ITALIC}"
+              italic=1
+           else
+              printf "${RESET}"
+              italic=0
+           fi
+       fi
+
+       if [ "${content:$i:1}" == '*' ]; then
+           if [ $bold == 0 ]; then
+              printf "${BOLD}"
+              bold=1
+           else
+              printf "${RESET}"
+              bold=0
+           fi
+
+           continue
+       fi
+
+       echo -ne "${content:$i:1}"
+       sleep 0.03
+    done
+
+    echo ""
+    tput cnorm
+}
+
+file=$1
+if [ -z "$file" ]; then
+    echo "Please specify the file."
+    exit 1
+fi
+
+RESET='\033[0;0m'
+BOLD='\033[0;1m'
+ITALIC='\033[0;3m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+GRAY='\033[0;37m'
+
+ctrl_c ()
+{
+    printf $RESET"\n"
+    tput cnorm
+    exit 0
+}
+trap ctrl_c INT
+
+speech
+printf ${RESET}
