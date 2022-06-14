@@ -10,7 +10,7 @@ speech ()
     tput civis
     clear
 
-    sleep 1
+    sleep 2
 
     bold=0
     italic=0
@@ -56,9 +56,10 @@ speech ()
        fi
 
        echo -ne "${content:$i:1}"
-       sleep 0.03
+       sleep 0.025
     done
 
+    sleep 5
     echo ""
     tput cnorm
 }
